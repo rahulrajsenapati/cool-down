@@ -173,7 +173,7 @@ function renderNotes(notes) {
           <a href="#" class="listen-note" title="Listen to Speech">Listen to Speech</a>
           <a href="#" class="delete-note" title="Delete">Delete</a>
         </p>
-        <p class="content">${note.content}</p>
+        <p class="content" style="text-align: -webkit-auto;">${note.content}</p>
       </li>`;    
     });
   }
@@ -185,17 +185,16 @@ function renderNotes(notes) {
 
 
 function saveNote(dateTime, content,wordno) {
-  localStorage.setItem('note-' + dateTime, content,content);
-  console.log('note-' + dateTime, content,content)
+  words = `<span style="color:red"> No of Words : </span>`
+  localStorage.setItem('note-' + dateTime, content+words+wordno);
 }
-
 
 function getAllNotes() {
   var notes = [];
   var key;
+
   for (var i = 0; i < localStorage.length; i++) {
     key = localStorage.key(i);
-
     if(key.substring(0,5) == 'note-') {
       notes.push({
         date: key.replace('note-',''),

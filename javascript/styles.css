@@ -1,3 +1,8 @@
+body{
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
 ul {
     list-style: none;
     padding: 0;
@@ -5,10 +10,17 @@ ul {
 
 p {
     color: #444;
+    font-size: 16px;
 }
 
 button:focus {
     outline: 0;
+}
+
+ul#notes {
+    max-height: 330px;
+    overflow-y: scroll;
+    padding: 3%;
 }
 
 .container {
@@ -16,7 +28,7 @@ button:focus {
     padding: 100px 50px;
     text-align: center;
     display: inline-block;
-    position: relative;
+   
 }
 
 .container-2 {
@@ -24,7 +36,7 @@ button:focus {
     padding: 100px 100px;
     text-align: center;
     display: inline-block;
-     position: absolute;  
+    position: absolute; 
 }
 
 
