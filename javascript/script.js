@@ -97,10 +97,10 @@ $('#save-note-btn').on('click', function(e) {
     instructions.text('Could not save empty speech. Please speak about something.');
   }
   else {
-    wordcount(noteContent)
+    var wordno = wordcount(noteContent)
     // Save note to localStorage.
     // The key is the dateTime with seconds, the value is the content of the note.
-    saveNote(new Date().toLocaleString(), noteContent);
+    saveNote(new Date().toLocaleString(), noteContent,wordno);
 
     // Reset variables and update UI.
     noteContent = '';
@@ -131,7 +131,14 @@ notesList.on('click', function(e) {
 });
 
 function wordcount(content){
-  console.log(content)
+   var count = 0;
+   words = content.split(" "); 
+    for (i=0 ; i < words.length ; i++){
+       // inner loop -- do the count
+       if (words[i] != "")
+          count += 1; 
+    }
+    return count;
 }
 
 /*-----------------------------
@@ -177,8 +184,9 @@ function renderNotes(notes) {
 }
 
 
-function saveNote(dateTime, content) {
-  localStorage.setItem('note-' + dateTime, content);
+function saveNote(dateTime, content,wordno) {
+  localStorage.setItem('note-' + dateTime, content,content);
+  console.log('note-' + dateTime, content,content)
 }
 
 
