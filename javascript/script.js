@@ -57,6 +57,7 @@ recognition.onstart = function() {
 }
 
 recognition.onspeechend = function() {
+  stopwatch.stop();
   instructions.text('You were quiet for a while so voice recognition turned itself off.');
 }
 
@@ -77,11 +78,13 @@ $('#start-record-btn').on('click', function(e) {
     noteContent += ' ';
   }
   recognition.start();
+  stopwatch.start();
 });
 
 
 $('#pause-record-btn').on('click', function(e) {
   recognition.stop();
+  stopwatch.stop();
   instructions.text('Recognition paused.');
 });
 
@@ -92,7 +95,7 @@ noteTextarea.on('input', function() {
 
 $('#save-note-btn').on('click', function(e) {
   recognition.stop();
-
+  stopwatch.stop();
   if(!noteContent.length) {
     instructions.text('Could not save empty speech. Please speak about something.');
   }
@@ -185,7 +188,10 @@ function renderNotes(notes) {
 
 
 function saveNote(dateTime, content,wordno) {
-  words = `<span style="color:red"> No of Words : </span>`
+  minitues = stopwatch.calcseconds()
+  console.log('save notes : '+minitues);
+  wordno = wordno / minitues
+  words = `<span style="color:red"> No of words per minitue : </span>`
   localStorage.setItem('note-' + dateTime, content+words+wordno);
 }
 
@@ -210,3 +216,102 @@ function deleteNote(dateTime) {
   localStorage.removeItem('note-' + dateTime); 
 }
 
+class Stopwatch {
+    constructor(display, results) {
+        this.running = false;
+        this.display = display;
+        this.results = results;
+        this.laps = [];
+        this.reset();
+        this.print(this.times);
+    }
+    
+    reset() {
+        this.times = [ 0, 0, 0 ];
+    }
+    
+    start() {
+        if (!this.time) this.time = performance.now();
+        if (!this.running) {
+            this.running = true;
+            requestAnimationFrame(this.step.bind(this));
+        }
+    }
+    
+    calcseconds(){
+    var time = this.times[1]+this.times[2]/ 60;
+    console.log(time)
+    return time;
+    }
+
+    stop() {
+        this.calcseconds();
+        this.running = false;
+        this.time = null;
+    }
+
+    restart() {
+        this.calcseconds();
+        if (!this.time) this.time = performance.now();
+        if (!this.running) {
+            this.running = true;
+            requestAnimationFrame(this.step.bind(this));
+        }
+        this.reset();
+    }
+    
+    clear() {
+        clearChildren(this.results);
+    }
+    
+    step(timestamp) {
+        if (!this.running) return;
+        this.calculate(timestamp);
+        this.time = timestamp;
+        this.print();
+        requestAnimationFrame(this.step.bind(this));
+    }
+    
+    calculate(timestamp) {
+        var diff = timestamp - this.time;
+        // Hundredths of a second are 100 ms
+        this.times[2] += diff / 10;
+        // Seconds are 100 hundredths of a second
+        if (this.times[2] >= 100) {
+            this.times[1] += 1;
+            this.times[2] -= 100;
+        }
+        // Minutes are 60 seconds
+        if (this.times[1] >= 60) {
+            this.times[0] += 1;
+            this.times[1] -= 60;
+        }
+    }
+    
+    print() {
+        this.display.innerText = this.format(this.times);
+    }
+    
+    format(times) {
+        return `\
+${pad0(times[0], 2)}:\
+${pad0(times[1], 2)}:\
+${pad0(Math.floor(times[2]), 2)}`;
+    }
+}
+
+function pad0(value, count) {
+    var result = value.toString();
+    for (; result.length < count; --count)
+        result = '0' + result;
+    return result;
+}
+
+function clearChildren(node) {
+    while (node.lastChild)
+        node.removeChild(node.lastChild);
+}
+
+let stopwatch = new Stopwatch(
+    document.querySelector('.stopwatch'),
+    document.querySelector('.results'));

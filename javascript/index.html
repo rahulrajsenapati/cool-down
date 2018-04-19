@@ -22,9 +22,16 @@
                     <textarea id="note-textarea" placeholder="Record your speech to recognize the modify the pitch and speed" rows="6"></textarea>
                 </div>         
                 <button id="start-record-btn" title="Start Recording">Start Recording</button>
-                <button id="pause-record-btn" title="Pause Recording">Pause Recording</button>
+                <button id="pause-record-btn" title="Pause Recording">Stop Recording</button>
                 <button id="save-note-btn" title="Save Note">Save the speech</button>   
                 <p id="recording-instructions">Press the <strong>Start Recording</strong> button and allow access.</p>
+                <nav class="controls">
+                    <a href="#" class="button" onClick="stopwatch.start();">Start</a>
+                    <a href="#" class="button" onClick="stopwatch.stop();">Stop</a>
+                    <a href="#" class="button" onClick="stopwatch.restart();">Restart</a>
+                </nav>
+        <div class="stopwatch"></div>
+        <ul class="results"></ul>
 
             </div>
 
