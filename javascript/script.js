@@ -239,7 +239,7 @@ class Stopwatch {
     }
     
     calcseconds(){
-    var time = this.times[1]+this.times[2]/ 60;
+    var time = this.times[0]+this.times[1]/60+this.times[2]/ 1000/60;
     console.log(time)
     return time;
     }
